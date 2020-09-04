@@ -4,6 +4,7 @@ use hyper::server::conn::Http;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
 use tonic::{Request, Response, Status};
+use tower::Service;
 
 pub mod hello_world {
     tonic::include_proto!("helloworld");
@@ -26,9 +27,18 @@ async fn main() {
         let http = http.clone();
         let svc = svc.clone();
 
-        tokio::spawn(ADDR.scope(addr, async move {
-            http.serve_connection(conn, svc).await.unwrap();
-        }));
+        tokio::spawn(async move {
+            let svc = svc.clone();
+            http.serve_connection(
+                conn,
+                hyper::service::service_fn(|req: hyper::Request<hyper::Body>| {
+                    let mut svc = svc.clone();
+                    async move { ADDR.scope(addr, async move { svc.call(req).await }).await }
+                }),
+            )
+            .await
+            .unwrap();
+        });
     }
 }
 

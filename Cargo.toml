@@ -12,6 +12,7 @@ hyper = "0.13"
 tokio-rustls = "0.14"
 tokio = { version = "0.2", features = ["full"] }
 prost = "0.6"
+tower = "0.3"
 
 [build-dependencies]
 tonic-build = "0.3"
