@@ -1,0 +1,17 @@
+[package]
+name = "tonic-peer-certs"
+version = "0.1.0"
+authors = ["luciofra"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tonic = "0.3"
+hyper = "0.13"
+tokio-rustls = "0.14"
+tokio = { version = "0.2", features = ["full"] }
+prost = "0.6"
+
+[build-dependencies]
+tonic-build = "0.3"
